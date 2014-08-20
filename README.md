@@ -1,16 +1,34 @@
-= gitlab_tracking
+# gitlab_tracking
 
 Parse webhooks gitlab and add to issue
 
+<center>
+<img src="https://raw.githubusercontent.com/alfss/gitlab_tracking/master/example.png" alt="example">
+</center>
+
+## Usage
+
 regexp search in commit message:
+```
     ((fix|ref)\s*#?[0-9]+)
+```
+<center>
+<img src="https://raw.githubusercontent.com/alfss/gitlab_tracking/master/example2.png" alt="example">
+</center>
+
 
 webhook url:
+```
     http://redmine[:port]/gitlab_tracking/webhook_parsing
+```
 
 settings plugin in redmine:
+```
     https://redmine.site.ru/settings/plugin/gitlab_tracking
+```
 
+## Example json gitlab
+```
 test json:
     {"before": "19eb9b3cf78b1ae44f8d475344a5b0f4f82cfc2b", "after": "024da924becaf445b0d4d1957fadb8988324dffa", "ref": "refs/heads/tgb", "user_id": 9, "user_name": "Nikolay Ulyanov", "project_id": 1, "repository": {
         "name": "site",
@@ -49,3 +67,4 @@ test json:
             }
         }
     ], "total_commits_count": 3}
+```
