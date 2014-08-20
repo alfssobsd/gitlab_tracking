@@ -1,4 +1,4 @@
-# gitlab_tracking
+# gitlab_tracking (Redmine 2.5.1+)
 
 Parse webhooks gitlab and add to issue
 
