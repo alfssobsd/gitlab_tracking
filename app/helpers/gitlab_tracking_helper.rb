@@ -1,0 +1,2 @@
+module GitlabTrackingHelper
+end

@@ -1,0 +1,50 @@
+<style type='text/css'>
+    .gitlab-tracking-row {padding: 5px; margin-top:15px; width: 600px; background-color:#fff; border: solid 1px #d5d5d5;}
+    .gitlab-tracking-avatar { padding-right: 10px; float: left;width: 65px;}
+    .gitlab-tracking-date {
+        border: solid 1px #d5d5d5;
+        padding: 2px;
+        position: relative;
+        max-width: 200px;
+        text-align: center;
+        left: 320px;
+        top: -16px;
+        background-color: #fff;}
+    .gitlab-tracking-hash {margin-top: 5px;}
+    .gitlab-tracking-message {margin-top: 5px; }
+    .gitlab-tracking-content { width: 525px; float: left;}
+    .gitlab-tracking-author {margin-top: -15px;}
+    .gitlab-tracking-clear { clear: left; }
+</style>
+
+<hr>
+<div id="gitlab_tracking">
+    <p>
+        <strong>
+            GitLab Tracking
+        </strong>
+    </p>
+
+    <% gtc_commit_list.each do |commit| %>
+        <div class="gitlab-tracking-row">
+            <div class="gitlab-tracking-avatar" style="">
+                <%= image_tag gravatar_url(commit.author_email, {size:64, ssl:true}) %>
+            </div>
+            <div class="gitlab-tracking-content">
+                <div class="gitlab-tracking-date">
+                    <%= I18n.l commit.timestamp.in_time_zone(User.current.time_zone), :format => :long %>
+                </div>
+                <div class="gitlab-tracking-author">
+                    <%= commit.author_name %> (<%= commit.author_email %>)
+                </div>
+                <div class="gitlab-tracking-hash">
+                    <%= link_to "#{commit.branch} - #{commit.git_hash}", "#{commit.gitlab_url}", :target => "_blank" %>
+                </div>
+                <div class="gitlab-tracking-message">
+                    <%= commit.message %>
+                </div>
+            </div>
+            <div class="gitlab-tracking-clear"></div>
+        </div>
+    <% end %>
+</div>
