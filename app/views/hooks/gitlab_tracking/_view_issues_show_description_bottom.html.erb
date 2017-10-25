@@ -25,6 +25,27 @@
         </strong>
     </p>
 
+    <% gtc_merge_request_list.each do |merge_request| %>
+        <div class="gitlab-tracking-row">
+            <div class="gitlab-tracking-content">
+                <div class="gitlab-tracking-date">
+                    <%= I18n.l merge_request.timestamp.in_time_zone(User.current.time_zone), :format => :long %>
+                </div>
+                <div class="gitlab-tracking-author">
+                    <%= merge_request.author_name %>
+                </div>
+                <div class="gitlab-tracking-hash">
+                    <%= link_to "#{merge_request.title}", "#{merge_request.gitlab_url}", :target => "_blank" %>
+                </div>
+                <div class="gitlab-tracking-message">
+                    <%= merge_request.source =%> -> <%= merge_request.target =%> |  <%= merge_request.state =%> |  <%= merge_request.merge_status =%>
+                </div>
+            </div>
+            <div class="gitlab-tracking-clear"></div>
+        </div>
+    <% end %>
+
+
     <% gtc_commit_list.each do |commit| %>
         <div class="gitlab-tracking-row">
             <div class="gitlab-tracking-avatar" style="">
