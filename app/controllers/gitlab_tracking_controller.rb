@@ -18,8 +18,9 @@ class GitlabTrackingController < ApplicationController
   def parse_merge_request_hook(body)
     search_regexp = get_issue_regexp
     merge_request = body['object_attributes']
-    author = body['user']
     match_regexp = merge_request['title'].gsub search_regexp
+    author = merge_request['last_commit']['author']
+    assignee = body['assignee']
     if not match_regexp
       match_regexp = merge_request['source_branch'].gsub search_regexp
     end
@@ -31,7 +32,7 @@ class GitlabTrackingController < ApplicationController
       issue_raw =~ /(?<issue_number>\d+)/
       begin
         issue = Issue.find(Regexp.last_match['issue_number'].to_i)
-        GitlabTrackingMergeRequest.parse_merge_request_and_create(issue, merge_request, author)
+        GitlabTrackingMergeRequest.parse_merge_request_and_create(issue, merge_request, author, assignee)
       rescue ActiveRecord::RecordNotFound
         # ignored
       end

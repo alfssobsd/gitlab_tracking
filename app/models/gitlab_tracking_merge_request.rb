@@ -5,7 +5,7 @@ class GitlabTrackingMergeRequest < ActiveRecord::Base
 
   class << self
 
-    def parse_merge_request_and_create(issue, merge_request, author)
+    def parse_merge_request_and_create(issue, merge_request, author, assignee)
       find_or_create_by(gitlab_id: merge_request['id']) do |gtmr|
         gtmr.issue = issue
 
@@ -18,11 +18,15 @@ class GitlabTrackingMergeRequest < ActiveRecord::Base
 
         gtmr.gitlab_url = merge_request['url']
 
-        gtmr.author_username = author['username']
-        gtmr.author_name = author['name']
+        if author
+          gtmr.author_username = author['username']
+          gtmr.author_name = author['name']
+        end
 
-        gtmr.assignee_username = merge_request['assignee']['username']
-        gtmr.assignee_name = merge_request['assignee']['name']
+        if assignee
+          gtmr.assignee_username = assignee['username']
+          gtmr.assignee_name = assignee['name']
+        end
 
         gtmr.timestamp = Time.parse(merge_request['created_at'])
         gtmr.save
