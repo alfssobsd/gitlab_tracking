@@ -1,5 +1,5 @@
 <style type='text/css'>
-    .gitlab-tracking-row {padding: 5px; margin-top:15px; width: 600px; background-color:#fff; border: solid 1px #d5d5d5;}
+    .gitlab-tracking-row {padding: 5px; margin-top:15px; width: 99%; background-color:#fff; border: solid 1px #d5d5d5;}
     .gitlab-tracking-avatar { padding-right: 10px; float: left;width: 65px;}
     .gitlab-tracking-date {
         border: solid 1px #d5d5d5;
@@ -11,17 +11,81 @@
         top: -16px;
         background-color: #fff;}
     .gitlab-tracking-hash {margin-top: 5px;}
-    .gitlab-tracking-message {margin-top: 5px; }
-    .gitlab-tracking-content { width: 525px; float: left;}
+    .gitlab-tracking-message {margin-top: 5px; font-size: small; font-style: italic}
+    .gitlab-tracking-content {float: left;}
+    .gitlab-tracking-labels {float: right; margin-top: 15px}
     .gitlab-tracking-author {margin-top: -15px;}
-    .gitlab-tracking-clear { clear: left; }
+    .gitlab-tracking-clear {clear: left;}
+    .gitlab-tracking-label {overflow: hidden; text-overflow: elipsis; white-space: nowrap; float: right; padding: 2px; border-radius: 3px; border: 1px solid black; margin: 3px}
+
+    .gitlab-tracking-mr-title {font-weight: bold;}
+    .gitlab-tracking-mr-row-author {font-size: x-small; font-style: italic;}
+    .gitlab-tracking-mr-assignee {}
+    .mr-state--opened {border-color: #5bc0de; color: #5bc0de;}
+    .mr-state--opened::before {content: "❂"}
+    .mr-state--closed {border-color: #d9534f; color: #d9534f;}
+    .mr-state--closed::before {content: "✕"}
+    .mr-state--merged {border-color: #5cb85c; color: #5cb8bc;}
+    .mr-state--merged::before {content: "✓"}
+
+    .mr-status--unchecked {border-color: #5bc0de; color: #5bc0de;}
+    .mr-status--unchecked::before {content: "❂"}
+    .mr-status--cannot_be_merged {border-color: #d9534f; color: #d9534f;}
+    .mr-status--cannot_be_merged::before {content: "✕"}
+    .mr-status--can_be_merged {border-color: #5cb85c; color: #5cb8bc;}
+    .mr-status--can_be_merged::before {content: "✓"}
+
 </style>
 
 <hr>
 <div id="gitlab_tracking">
     <p>
         <strong>
-            GitLab Tracking
+            Merge Requests
+        </strong>
+    </p>
+
+    <% gtc_merge_request_list.each do |merge_request| %>
+        <div class="gitlab-tracking-row">
+            <div class="gitlab-tracking-avatar" style="">
+                <img style="width: 64px; height: 64px;" src="https://gitlab.com/gitlab-com/gitlab-artwork/raw/master/wordmark/stacked_wm_no_bg.png" />
+            </div>
+            <div class="gitlab-tracking-content">
+                    <div class="gitlab-tracking-date">
+                        <%= I18n.l merge_request.timestamp.in_time_zone(User.current.time_zone), :format => :long %>
+                    </div>
+                <div class="gitlab-tracking-mr-row-title">
+                    <div class="gitlab-tracking-mr-title">
+                        <%= link_to "#{merge_request.title}", "#{merge_request.gitlab_url}", :target => "_blank" %>
+                    </div>
+                </div>
+                <div class="gitlab-tracking-mr-row-author">
+                    <div class="gitlab-tracking-mr-author">
+                        Author: <%= merge_request.author_name %>
+                    </div>
+                    <div class="gitlab-tracking-mr-assignee">
+                        Assignee: <%= merge_request.assignee_name %>
+                    </div>
+                </div>
+                <div class="gitlab-tracking-message">
+                    <%= merge_request.source =%> &#8594; <%= merge_request.target =%> 
+                </div>
+            </div>
+            <div class="gitlab-tracking-labels">
+                    <div class="gitlab-tracking-label mr-state--<%= merge_request.state %>">
+                        <%= merge_request.state =%>
+                    </div>
+                    <div class="gitlab-tracking-label mr-status mr-status--<%= merge_request.merge_status %>">
+                        <%= merge_request.merge_status =%>
+                    </div>
+            </div>
+            <div class="gitlab-tracking-clear"></div>
+        </div>
+    <% end %>
+
+    <p>
+        <strong>
+            Commmits
         </strong>
     </p>
 

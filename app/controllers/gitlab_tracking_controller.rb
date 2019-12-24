@@ -4,8 +4,39 @@ class GitlabTrackingController < ApplicationController
   skip_before_action  :check_if_login_required
 
   def webhook_parsing
-    parse_push_hook(JSON.parse(request.body.read))
+    body = JSON.parse(request.body.read)
+    if body['object_kind'] == 'push'
+      parse_push_hook(JSON.parse(request.body.read))
+    elsif body['object_kind'] == 'merge_request'
+      parse_merge_request_hook(body)
+    end
     render status: 200, json: "OK".to_json
+  end
+
+  protected
+
+  def parse_merge_request_hook(body)
+    search_regexp = get_issue_regexp
+    merge_request = body['object_attributes']
+    match_regexp = merge_request['title'].gsub search_regexp
+    author = merge_request['last_commit']['author']
+    assignee = body['assignee']
+    if not match_regexp
+      match_regexp = merge_request['source_branch'].gsub search_regexp
+    end
+    if not match_regexp
+      match_regexp = merge_request['last_commit']['message'].gsub search_regexp
+    end
+
+    match_regexp.each do |issue_raw|
+      issue_raw =~ /(?<issue_number>\d+)/
+      begin
+        issue = Issue.find(Regexp.last_match['issue_number'].to_i)
+        GitlabTrackingMergeRequest.parse_merge_request_and_create(issue, merge_request, author, assignee)
+      rescue ActiveRecord::RecordNotFound
+        # ignored
+      end
+    end
   end
 
   protected
