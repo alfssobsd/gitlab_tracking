@@ -1,4 +1,4 @@
-class CreateGitlabTrackingCommits < ActiveRecord::Migration
+class CreateGitlabTrackingCommits < Rails.version < '5.1' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def change
     create_table :gitlab_tracking_commits do |t|
       t.integer :issue_id

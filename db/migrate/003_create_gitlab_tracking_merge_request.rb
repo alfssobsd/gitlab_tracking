@@ -1,4 +1,4 @@
-class CreateGitlabTrackingMergeRequest < ActiveRecord::Migration
+class CreateGitlabTrackingMergeRequest < Rails.version < '5.1' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
   def change
     create_table :gitlab_tracking_merge_requests do |t|
       t.integer :issue_id
